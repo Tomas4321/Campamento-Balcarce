@@ -112,6 +112,37 @@ function setupSmoothScroll() {
   });
 }
 
+// ── Hamburger menu toggle ──
+function setupHamburger() {
+  const toggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('main-nav');
+  if (!toggle || !nav) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('is-open');
+    toggle.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Close on nav link click
+  nav.querySelectorAll('.nav__link').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+      nav.classList.remove('is-open');
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
   setupGeneralButtons();
@@ -119,4 +150,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupReveal();
   setupHeaderScroll();
   setupSmoothScroll();
+  setupHamburger();
 });

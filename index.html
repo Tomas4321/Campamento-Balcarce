@@ -17,11 +17,10 @@
 <body>
 
   <!-- HEADER / NAV -->
-  <header class="header">
+  <header class="header" id="header">
     <div class="container header__inner">
       <a href="#" class="logo">
-        <span class="logo__dot"></span>
-        Campamento<strong>Balcarce</strong>
+        <img src="img/3Mas1.png" alt="Tres Mas Uno" class="logo__img" id="header-logo" />
       </a>
       <!-- Hamburger button (mobile only) -->
       <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
@@ -30,15 +29,6 @@
       <nav class="nav" id="main-nav">
         <a href="#gorras" class="nav__link" id="nav-gorras">Gorras</a>
         <a href="#remeras" class="nav__link" id="nav-remeras">Remeras</a>
-        <a href="#contacto" class="nav__link nav__link--cta" id="nav-wsp">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-            <path
-              d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.137 1.532 5.875L0 24l6.273-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.679-.488-5.23-1.344l-.374-.22-3.726.896.936-3.622-.242-.374A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-          </svg>
-          WhatsApp
-        </a>
       </nav>
     </div>
   </header>
@@ -46,42 +36,33 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container hero__inner">
-      <div class="hero__badge reveal">Nueva colección</div>
-      <h1 class="hero__title reveal">
-        Tu estilo,<br />
-        <span class="hero__highlight">tu identidad.</span>
-      </h1>
-      <p class="hero__subtitle reveal">
-        Gorras y remeras de calidad premium.<br />
-        Hacé tu pedido directo por WhatsApp.
-      </p>
-      <div class="hero__ctas reveal">
-        <button class="btn btn--primary" id="hero-wsp-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-            <path
-              d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.137 1.532 5.875L0 24l6.273-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.679-.488-5.23-1.344l-.374-.22-3.726.896.936-3.622-.242-.374A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-          </svg>
-          Consultar ahora
-        </button>
-        <a href="#gorras" class="btn btn--ghost">Ver productos</a>
+      <div class="hero__content">
+        <div class="hero__badge reveal">Nueva colección</div>
+        <h1 class="hero__title reveal">
+          Tu estilo,<br />
+          <span class="hero__highlight">tu identidad.</span>
+        </h1>
+        <p class="hero__subtitle reveal">
+          Ropa de calidad premium.<br />
+          Hacé tu pedido directo por WhatsApp.
+        </p>
+        <div class="hero__ctas reveal">
+          <a href="#gorras" class="btn btn--primary">Ver productos</a>
+        </div>
+        <div class="hero__stats reveal">
+          <div class="stat">
+            <span class="stat__num">100%</span>
+            <span class="stat__label">Calidad</span>
+          </div>
+          <div class="stat__divider"></div>
+          <div class="stat">
+            <span class="stat__num">Envíos</span>
+            <span class="stat__label">a todo el país</span>
+          </div>
+        </div>
       </div>
-      <div class="hero__stats reveal">
-        <div class="stat">
-          <span class="stat__num">100%</span>
-          <span class="stat__label">Calidad</span>
-        </div>
-        <div class="stat__divider"></div>
-        <div class="stat">
-          <span class="stat__num">Envío</span>
-          <span class="stat__label">a todo el país</span>
-        </div>
-        <div class="stat__divider"></div>
-        <div class="stat">
-          <span class="stat__num">Rápido</span>
-          <span class="stat__label">respuesta 24h</span>
-        </div>
+      <div class="hero__visual reveal">
+        <img src="img/campamentoVerano2026.jpeg" alt="Jóvenes La Roca" class="hero__image" />
       </div>
     </div>
     <div class="hero__scroll-indicator">
@@ -181,11 +162,7 @@
   </section>
 
   <!-- DIVIDER BANNER -->
-  <div class="banner reveal">
-    <div class="container banner__inner">
-      <p class="banner__text">Enviamos a todo el país · Pagás al recibir · Respuesta en el día</p>
-    </div>
-  </div>
+  <div class="banner reveal"></div>
 
   <!-- REMERAS -->
   <section class="products products--alt" id="remeras">
@@ -283,6 +260,36 @@
     </div>
   </section>
 
+  <!-- GALERÍA DE LIBRO -->
+  <section class="gallery" id="galeria">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Imágenes</span>
+        <h2 class="section-title">El Libro</h2>
+        <p class="section-desc">Conocé en detalle nuestro material exclusivo.</p>
+      </div>
+      <div class="gallery__grid">
+        <img src="img/Libro1.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+        <img src="img/Libro2.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+        <img src="img/Libro3.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+        <img src="img/Libro4.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+        <img src="img/Libro5.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+        <img src="img/Libro6.jpeg" alt="Página o cubierta del libro" class="gallery__img reveal" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- NOSOTROS (PRÓXIMAMENTE) -->
+  <section class="about reveal" id="nosotros">
+    <div class="about__bg">
+      <img src="img/campamentoVerano2026.jpeg" alt="Nosotros background" loading="lazy" />
+      <div class="about__overlay"></div>
+    </div>
+    <div class="about__content">
+      <h2 class="about__title">Próximamente</h2>
+    </div>
+  </section>
+
   <!-- CTA BANNER FINAL -->
   <section class="cta-section" id="contacto">
     <div class="container cta-section__inner reveal">
@@ -311,16 +318,79 @@
     </div>
   </footer>
 
-  <!-- BOTÓN FLOTANTE WHATSAPP -->
-  <a class="wsp-fab" id="wsp-fab" href="#" aria-label="Contactar por WhatsApp">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-      <path
-        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-      <path
-        d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.137 1.532 5.875L0 24l6.273-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.679-.488-5.23-1.344l-.374-.22-3.726.896.936-3.622-.242-.374A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+  <!-- BOTÓN FLOTANTE CARRITO -->
+  <button class="cart-fab" id="cart-fab" aria-label="Ver carrito">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+      width="26" height="26">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
     </svg>
-    <span class="wsp-fab__pulse"></span>
-  </a>
+    <span class="cart-fab__badge" id="cart-badge">0</span>
+  </button>
+
+  <!-- MODAL DE PRODUCTO -->
+  <div class="modal" id="product-modal">
+    <div class="modal__backdrop" id="modal-backdrop"></div>
+    <div class="modal__content">
+      <button class="modal__close" id="modal-close">&times;</button>
+      <div class="modal__watermark">
+        <img src="img/3Mas1.png" alt="3 MAS 1 Logo" />
+      </div>
+      <div class="modal__body">
+        <div class="modal__img-wrap">
+          <img src="" alt="" id="modal-img" />
+        </div>
+        <div class="modal__info">
+          <h3 class="modal__title" id="modal-title"></h3>
+          <p class="modal__desc" id="modal-desc"></p>
+          <div class="modal__price" id="modal-price">Consultá precio</div>
+
+          <div id="modal-options" class="modal__options">
+            <!-- Selectores para remeras (Talle y Color) se inyectarán aquí por JS -->
+          </div>
+
+          <div class="modal__qty">
+            <span class="modal__label">Cantidad</span>
+            <div class="qty-control">
+              <button id="qty-minus" class="qty-btn">-</button>
+              <input type="number" id="modal-qty" value="1" min="1" max="99" readonly />
+              <button id="qty-plus" class="qty-btn">+</button>
+            </div>
+          </div>
+
+          <button class="btn btn--primary modal__add-btn" id="modal-add-btn">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARRITO SIDEBAR -->
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-sidebar__backdrop" id="cart-backdrop"></div>
+    <div class="cart-sidebar__content">
+      <div class="cart-sidebar__header">
+        <h3 class="cart-sidebar__title">Tu Pedido</h3>
+        <button class="cart-sidebar__close" id="cart-close">&times;</button>
+      </div>
+      <div class="cart-sidebar__items" id="cart-items">
+        <!-- Ítems del carrito se inyectan acá -->
+        <p class="cart-empty">Tu carrito está vacío.</p>
+      </div>
+      <div class="cart-sidebar__footer">
+        <button class="btn btn--primary btn--wsp" id="cart-checkout-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            <path
+              d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.137 1.532 5.875L0 24l6.273-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.679-.488-5.23-1.344l-.374-.22-3.726.896.936-3.622-.242-.374A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+          </svg>
+          Enviar pedido por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

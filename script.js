@@ -1,9 +1,9 @@
 // ============================================================
 // CAMPAMENTO BALCARCE — script.js
-// WhatsApp: 2494240181
+// WhatsApp: +54 9 2494240181
 // ============================================================
 
-const WA_NUMBER = '542494240181'; // Argentina (+54) + número sin 0 ni 15
+const WA_NUMBER = '5492494240181';
 
 // ── Build WhatsApp URL ──
 function buildWaUrl(message) {
@@ -11,56 +11,227 @@ function buildWaUrl(message) {
   return `https://wa.me/${WA_NUMBER}?text=${encoded}`;
 }
 
-// ── Open WhatsApp ──
 function openWhatsApp(message) {
   window.open(buildWaUrl(message), '_blank', 'noopener,noreferrer');
 }
 
-// ── Hero / Nav / CTA general buttons ──
-const generalMessage = '¡Hola! Vi su catálogo de gorras y remeras en Campamento Balcarce y me gustaría consultar sobre los productos disponibles.';
+// ── CART STATE ──
+let cart = [];
 
+// ── DOM ELEMENTS ──
+const modal = document.getElementById('product-modal');
+const modalClose = document.getElementById('modal-close');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalImg = document.getElementById('modal-img');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const modalPrice = document.getElementById('modal-price');
+const modalOptions = document.getElementById('modal-options');
+const modalQty = document.getElementById('modal-qty');
+const qtyMinus = document.getElementById('qty-minus');
+const qtyPlus = document.getElementById('qty-plus');
+const modalAddBtn = document.getElementById('modal-add-btn');
+
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartFab = document.getElementById('cart-fab');
+const cartBadge = document.getElementById('cart-badge');
+const cartClose = document.getElementById('cart-close');
+const cartBackdrop = document.getElementById('cart-backdrop');
+const cartItemsContainer = document.getElementById('cart-items');
+const cartCheckoutBtn = document.getElementById('cart-checkout-btn');
+
+let currentProduct = null;
+
+// ── GENERAL CTAS ──
 function setupGeneralButtons() {
-  const ids = ['hero-wsp-btn', 'cta-wsp-btn', 'nav-wsp', 'wsp-fab'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        openWhatsApp(generalMessage);
-      });
+  const ctaBtn = document.getElementById('cta-wsp-btn');
+  if (ctaBtn) {
+    ctaBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openWhatsApp('¡Hola! Estuve viendo la página de Jóvenes La Roca y me gustaría hacerles una consulta general.');
+    });
+  }
+}
+
+// ── PRODUCT MODAL LOGIC ──
+function openModal(card) {
+  const name = card.querySelector('.product-card__name').textContent;
+  const desc = card.querySelector('.product-card__desc').textContent;
+  const price = card.querySelector('.product-card__price').textContent;
+
+  // Try to find image
+  const imgEl = card.querySelector('img.product-card__img');
+  let imgSrc = '';
+  if (imgEl) {
+    imgSrc = imgEl.src;
+  } else {
+    // Transparent pixel if no image
+    imgSrc = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+  }
+
+  currentProduct = {
+    name,
+    price,
+    img: imgSrc,
+    // Identify remera purely by name
+    isRemera: name.toLowerCase().includes('remera')
+  };
+
+  modalTitle.textContent = name;
+  modalDesc.textContent = desc;
+  modalPrice.textContent = price;
+  modalImg.src = imgSrc;
+  modalQty.value = 1;
+
+  // Build options if it's a Remera
+  modalOptions.innerHTML = '';
+  if (currentProduct.isRemera) {
+    modalOptions.innerHTML = `
+      <select id="modal-size" class="modal__select">
+        <option value="" disabled selected>Seleccioná tu talle</option>
+        <option value="S">Talle S</option>
+        <option value="M">Talle M</option>
+        <option value="L">Talle L</option>
+        <option value="XL">Talle XL</option>
+        <option value="XXL">Talle XXL</option>
+      </select>
+      <select id="modal-color" class="modal__select">
+        <option value="" disabled selected>Seleccioná el color</option>
+        <option value="Negro">Negro</option>
+        <option value="Blanco">Blanco</option>
+        <option value="Beige">Beige</option>
+        <option value="Gris">Gris</option>
+      </select>
+    `;
+  }
+
+  modal.classList.add('is-active');
+}
+
+function closeModal() {
+  modal.classList.remove('is-active');
+  currentProduct = null;
+}
+
+function setupModal() {
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card));
+  });
+
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+
+  // Qty controls
+  if (qtyMinus) qtyMinus.addEventListener('click', () => {
+    let val = parseInt(modalQty.value) || 1;
+    if (val > 1) modalQty.value = val - 1;
+  });
+
+  if (qtyPlus) qtyPlus.addEventListener('click', () => {
+    let val = parseInt(modalQty.value) || 1;
+    if (val < 99) modalQty.value = val + 1;
+  });
+
+  // Add to cart
+  if (modalAddBtn) modalAddBtn.addEventListener('click', () => {
+    if (!currentProduct) return;
+
+    let optionsText = '';
+    if (currentProduct.isRemera) {
+      const sizeList = document.getElementById('modal-size');
+      const colorList = document.getElementById('modal-color');
+
+      const size = sizeList ? sizeList.value : '';
+      const color = colorList ? colorList.value : '';
+
+      if (!size || !color) {
+        alert('Por favor, seleccioná talla y color para continuar.');
+        return;
+      }
+      optionsText = `Talle: ${size} | Color: ${color}`;
     }
+
+    const qty = parseInt(modalQty.value) || 1;
+
+    cart.push({
+      id: Date.now(),
+      name: currentProduct.name,
+      price: currentProduct.price,
+      img: currentProduct.img,
+      qty: qty,
+      options: optionsText
+    });
+
+    updateCartUI();
+    closeModal();
+    openCart(); // Show cart when item added
   });
 }
 
-// ── Product "Pedir" buttons ──
-function setupProductButtons() {
-  document.querySelectorAll('.btn--card[data-product]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const product = btn.getAttribute('data-product');
-      const msg = `¡Hola! Me interesa el/la *${product}* que vi en Campamento Balcarce. ¿Podría darme más información sobre precio y disponibilidad?`;
-      openWhatsApp(msg);
-    });
-  });
+// ── CART LOGIC ──
+function openCart() {
+  if (cartSidebar) cartSidebar.classList.add('is-active');
+}
 
-  // Clicking the card itself also opens WhatsApp
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const productBtn = card.querySelector('.btn--card[data-product]');
-      if (productBtn) {
-        const product = productBtn.getAttribute('data-product');
-        const msg = `¡Hola! Me interesa el/la *${product}* que vi en Campamento Balcarce. ¿Podría darme más información sobre precio y disponibilidad?`;
-        openWhatsApp(msg);
+function closeCart() {
+  if (cartSidebar) cartSidebar.classList.remove('is-active');
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  // Update badge
+  const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+  if (cartBadge) cartBadge.textContent = totalItems;
+
+  if (cart.length === 0) {
+    cartItemsContainer.innerHTML = '<p class="cart-empty">Tu carrito está vacío.</p>';
+    return;
+  }
+
+  cartItemsContainer.innerHTML = '';
+  cart.forEach(item => {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'cart-item';
+    itemEl.innerHTML = `
+      <img src="${item.img}" alt="${item.name}" class="cart-item__img" />
+      <div class="cart-item__info">
+        <h4 class="cart-item__name">${item.name}</h4>
+        ${item.options ?\`<span class="cart-item__opts">\${item.options}</span>\` : ''}
+        <span class="cart-item__qty-price">\${item.qty} x \${item.price}</span>
+        <button class="cart-item__remove" onclick="removeFromCart(${item.id})">Eliminar</button>
+      </div>
+    `;
+    cartItemsContainer.appendChild(itemEl);
+  });
+}
+
+function setupCart() {
+  if (cartFab) cartFab.addEventListener('click', openCart);
+  if (cartClose) cartClose.addEventListener('click', closeCart);
+  if (cartBackdrop) cartBackdrop.addEventListener('click', closeCart);
+
+  if (cartCheckoutBtn) cartCheckoutBtn.addEventListener('click', () => {
+    if (cart.length === 0) return;
+
+    let msg = '¡Hola! Quiero hacer el siguiente pedido en Jóvenes La Roca:\\n\\n';
+    cart.forEach(item => {
+      msg += \`▪️ \${item.qty}x *\${item.name}*\\n\`;
+      if (item.options) {
+        msg += \`   (\${item.options})\\n\`;
       }
     });
+    msg += '\\n¡Aguardá su respuesta para confirmar!';
+    openWhatsApp(msg);
   });
 }
 
-// ── Reveal on scroll (Intersection Observer) ──
+// ── Reveal on scroll ──
 function setupReveal() {
   const elements = document.querySelectorAll('.reveal');
-
-  // Check if reduced motion is preferred
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
     elements.forEach(el => el.classList.add('visible'));
@@ -80,20 +251,21 @@ function setupReveal() {
   );
 
   elements.forEach((el, i) => {
-    // Staggered delay for siblings inside same parent
-    el.style.transitionDelay = `${(i % 4) * 0.07}s`;
+    el.style.transitionDelay = \`\${(i % 4) * 0.07}s\`;
     observer.observe(el);
   });
 }
 
-// ── Header shadow on scroll ──
+// ── Header state on scroll ──
 function setupHeaderScroll() {
   const header = document.querySelector('.header');
   if (!header) return;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
+    if (window.scrollY > 20) {
+      header.classList.add('header--scrolled');
       header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
     } else {
+      header.classList.remove('header--scrolled');
       header.style.boxShadow = 'none';
     }
   }, { passive: true });
@@ -124,7 +296,6 @@ function setupHamburger() {
     toggle.setAttribute('aria-expanded', isOpen);
   });
 
-  // Close on nav link click
   nav.querySelectorAll('.nav__link').forEach(link => {
     link.addEventListener('click', () => {
       nav.classList.remove('is-open');
@@ -133,7 +304,6 @@ function setupHamburger() {
     });
   });
 
-  // Close on outside click
   document.addEventListener('click', (e) => {
     if (!toggle.contains(e.target) && !nav.contains(e.target)) {
       nav.classList.remove('is-open');
@@ -143,12 +313,23 @@ function setupHamburger() {
   });
 }
 
+// ── Esc Key global listener ──
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeCart();
+  }
+});
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
   setupGeneralButtons();
-  setupProductButtons();
+  setupModal();
+  setupCart();
   setupReveal();
   setupHeaderScroll();
   setupSmoothScroll();
   setupHamburger();
+  
+  window.removeFromCart = removeFromCart;
 });

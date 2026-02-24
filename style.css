@@ -330,15 +330,26 @@ button {
 .hero__inner {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 32px;
+  /* Added for mobile spacing */
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.hero__visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .hero__image {
   width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  max-width: 250px;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
   object-fit: cover;
-  margin-top: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .hero__badge {
@@ -510,7 +521,7 @@ button {
 /* Mobile card: side-by-side layout (image left, body right) */
 .product-card__img-wrap {
   position: relative;
-  background: var(--color-placeholder-bg);
+  background: #fdfdfd;
   flex-shrink: 0;
   /* Full-width image on mobile */
   aspect-ratio: 4 / 3;
@@ -638,8 +649,14 @@ button {
 
 .gallery__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 480px) {
+  .gallery__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .gallery__img {
@@ -864,48 +881,15 @@ button {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
-
-  .product-card__img-wrap {
-    aspect-ratio: 1 / 1;
-  }
 }
 
 /* ══════════════════════════════════════════
-   BREAKPOINT: 640px+ — desktop nav appears
+   BREAKPOINT: 640px+ 
+   We keep nav hidden in hamburger as requested.
 ══════════════════════════════════════════ */
 @media (min-width: 640px) {
   :root {
     --header-h: 66px;
-  }
-
-  /* Hide hamburger, show inline nav */
-  .nav-toggle {
-    display: none;
-  }
-
-  .nav {
-    display: flex !important;
-    flex-direction: row;
-    position: static;
-    background: none;
-    border: none;
-    padding: 0;
-    box-shadow: none;
-    gap: 4px;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
-  .nav__link {
-    font-size: 0.85rem;
-    padding: 7px 12px;
-    width: auto;
-  }
-
-  .nav__link--cta {
-    justify-content: initial;
-    margin-top: 0;
-    padding: 8px 14px;
   }
 
   .gallery__grid {
@@ -1141,7 +1125,34 @@ button {
 .modal__img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+/* Image Expansion Modal */
+.image-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw !important;
+}
+
+.image-modal-img {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.js-image-modal {
+  cursor: pointer;
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.js-image-modal:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .modal__info {

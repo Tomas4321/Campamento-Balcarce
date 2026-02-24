@@ -272,14 +272,62 @@ function setupHeaderScroll() {
 }
 
 // ── Smooth scroll for anchor links ──
-function setupSmoothScroll() {
+function setupSmoothScroll() { // Smooth scroll
+  const navMenu = document.getElementById('main-nav'); // Assuming main-nav is the navigation menu
+  const navToggle = document.getElementById('nav-toggle'); // Assuming nav-toggle is the hamburger button
+
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      const target = document.querySelector(anchor.getAttribute('href'));
+    anchor.addEventListener('click', function (e) {
+      if (this.getAttribute('href') === '#') return;
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
       if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (navMenu) navMenu.classList.remove('is-open'); // Changed from is-active to is-open based on setupHamburger
+        if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+        if (navToggle) navToggle.classList.remove('is-open'); // Close hamburger icon too
+
+        const headerOffset = 80; // Offset for header
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
       }
+    });
+  });
+}
+
+function setupImageModal() {
+  const images = document.querySelectorAll('.js-image-modal');
+  if (images.length === 0) return;
+
+  // Create modal container
+  const modalContainer = document.createElement('div');
+  modalContainer.className = 'modal js-modal-gallery';
+  modalContainer.innerHTML = `
+    <div class="modal__backdrop js-gallery-close"></div>
+    <div class="modal__content image-modal-content">
+      <button class="modal__close js-gallery-close">&times;</button>
+      <img src="" class="image-modal-img" id="gallery-expanded-img" alt="Vista expandida" />
+    </div>
+  `;
+  document.body.appendChild(modalContainer);
+
+  const imgEl = document.getElementById('gallery-expanded-img');
+  const closers = modalContainer.querySelectorAll('.js-gallery-close');
+
+  images.forEach(img => {
+    img.addEventListener('click', () => {
+      imgEl.src = img.src;
+      modalContainer.classList.add('is-active');
+    });
+  });
+
+  closers.forEach(closer => {
+    closer.addEventListener('click', () => {
+      modalContainer.classList.remove('is-active');
     });
   });
 }
@@ -330,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeaderScroll();
   setupSmoothScroll();
   setupHamburger();
+  setupImageModal();
 
   window.removeFromCart = removeFromCart;
 });

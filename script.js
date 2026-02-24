@@ -308,15 +308,17 @@ function setupImageModal() {
   modalContainer.className = 'modal js-modal-gallery';
   modalContainer.innerHTML = `
     <div class="modal__backdrop js-gallery-close"></div>
-    <div class="modal__content image-modal-content">
-      <button class="modal__close js-gallery-close">&times;</button>
+    <div class="modal__content image-modal-content" style="flex-direction: column; gap: 20px;">
+      <button class="modal__close js-gallery-close" style="top: 10px; right: 10px; z-index: 10;">&times;</button>
       <img src="" class="image-modal-img" id="gallery-expanded-img" alt="Vista expandida" />
+      <button id="gallery-wsp-btn" class="btn btn--primary" style="margin-top: 10px; width: auto; padding: 10px 24px;">Pedir por WhatsApp</button>
     </div>
   `;
   document.body.appendChild(modalContainer);
 
   const imgEl = document.getElementById('gallery-expanded-img');
   const closers = modalContainer.querySelectorAll('.js-gallery-close');
+  const wspBtn = document.getElementById('gallery-wsp-btn');
 
   images.forEach(img => {
     img.addEventListener('click', () => {
@@ -329,6 +331,20 @@ function setupImageModal() {
     closer.addEventListener('click', () => {
       modalContainer.classList.remove('is-active');
     });
+  });
+
+  // Close when clicking the content area outside the image
+  const contentArea = modalContainer.querySelector('.image-modal-content');
+  contentArea.addEventListener('click', (e) => {
+    if (e.target === contentArea) {
+      modalContainer.classList.remove('is-active');
+    }
+  });
+
+  // WhatsApp button redirect
+  wspBtn.addEventListener('click', () => {
+    const msg = '¡Hola! Quiero pedir el libro "Permanecer" que vi en la galería.';
+    openWhatsApp(msg);
   });
 }
 

@@ -329,27 +329,35 @@ button {
 
 .hero__inner {
   display: flex;
-  flex-direction: column;
-  gap: 32px;
-  /* Added for mobile spacing */
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   position: relative;
   max-width: 680px;
   margin: 0 auto;
 }
 
+.hero__content {
+  flex: 0 0 58%;
+  max-width: 58%;
+}
+
 .hero__visual {
   position: relative;
   display: flex;
+  flex: 0 0 38%;
+  max-width: 38%;
   justify-content: center;
 }
 
 .hero__image {
   width: 100%;
-  max-width: 250px;
-  border-radius: 50%;
-  aspect-ratio: 1/1;
+  height: auto;
+  border-radius: 16px;
+  /* rectangular with rounded corners */
   object-fit: cover;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .hero__badge {

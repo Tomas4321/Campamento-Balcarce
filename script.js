@@ -200,8 +200,8 @@ function updateCartUI() {
       <img src="${item.img}" alt="${item.name}" class="cart-item__img" />
       <div class="cart-item__info">
         <h4 class="cart-item__name">${item.name}</h4>
-        ${item.options ?\`<span class="cart-item__opts">\${item.options}</span>\` : ''}
-        <span class="cart-item__qty-price">\${item.qty} x \${item.price}</span>
+        ${item.options ? `<span class="cart-item__opts">${item.options}</span>` : ''}
+        <span class="cart-item__qty-price">${item.qty} x ${item.price}</span>
         <button class="cart-item__remove" onclick="removeFromCart(${item.id})">Eliminar</button>
       </div>
     `;
@@ -217,14 +217,14 @@ function setupCart() {
   if (cartCheckoutBtn) cartCheckoutBtn.addEventListener('click', () => {
     if (cart.length === 0) return;
 
-    let msg = '¡Hola! Quiero hacer el siguiente pedido en Jóvenes La Roca:\\n\\n';
+    let msg = '¡Hola! Quiero hacer el siguiente pedido en Jóvenes La Roca:\n\n';
     cart.forEach(item => {
-      msg += \`▪️ \${item.qty}x *\${item.name}*\\n\`;
+      msg += `▪️ ${item.qty}x *${item.name}*\n`;
       if (item.options) {
-        msg += \`   (\${item.options})\\n\`;
+        msg += `   (${item.options})\n`;
       }
     });
-    msg += '\\n¡Aguardá su respuesta para confirmar!';
+    msg += '\n¡Aguardá su respuesta para confirmar!';
     openWhatsApp(msg);
   });
 }
@@ -233,10 +233,10 @@ function setupCart() {
 function setupReveal() {
   const elements = document.querySelectorAll('.reveal');
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
-    elements.forEach(el => el.classList.add('visible'));
-    return;
-  }
+  if (prefersReduced) return;
+
+  // Si JS funciona, los escondemos preparándolos para la animación
+  elements.forEach(el => el.classList.add('js-reveal'));
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -247,11 +247,11 @@ function setupReveal() {
         }
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -20px 0px' }
+    { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
   );
 
   elements.forEach((el, i) => {
-    el.style.transitionDelay = \`\${(i % 4) * 0.07}s\`;
+    el.style.transitionDelay = `${(i % 4) * 0.07}s`;
     observer.observe(el);
   });
 }
@@ -330,6 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeaderScroll();
   setupSmoothScroll();
   setupHamburger();
-  
+
   window.removeFromCart = removeFromCart;
 });

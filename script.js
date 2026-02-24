@@ -226,6 +226,11 @@ function setupCart() {
     });
     msg += '\n¡Aguardá su respuesta para confirmar!';
     openWhatsApp(msg);
+
+    // Reset cart state after ordering
+    cart = [];
+    updateCartUI();
+    closeCart();
   });
 }
 
@@ -395,6 +400,65 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSmoothScroll();
   setupHamburger();
   setupImageModal();
+  setupGorrasCarousel();
 
   window.removeFromCart = removeFromCart;
 });
+
+// ── GORRAS CAROUSEL ──
+function setupGorrasCarousel() {
+  const track = document.getElementById('gorras-track');
+  const btnPrev = document.getElementById('carousel-prev');
+  const btnNext = document.getElementById('carousel-next');
+  if (!track || !btnPrev || !btnNext) return;
+
+  const VISIBLE = 3; // max cards visible on desktop
+  let currentIndex = 0;
+
+  function getCards() {
+    return Array.from(track.querySelectorAll('.product-card'));
+  }
+
+  function isDesktop() {
+    return window.innerWidth >= 768;
+  }
+
+  function getStep() {
+    const cards = getCards();
+    if (!cards.length) return 0;
+    const card = cards[0];
+    const gap = 20;
+    return card.offsetWidth + gap;
+  }
+
+  function getMaxIndex() {
+    const cards = getCards();
+    return Math.max(0, cards.length - VISIBLE);
+  }
+
+  function moveTo(index) {
+    if (!isDesktop()) return;
+    const max = getMaxIndex();
+    currentIndex = Math.max(0, Math.min(index, max));
+    const offset = currentIndex * getStep();
+    track.style.transform = `translateX(-${offset}px)`;
+    btnPrev.style.opacity = currentIndex === 0 ? '0.4' : '1';
+    btnNext.style.opacity = currentIndex >= max ? '0.4' : '1';
+  }
+
+  btnPrev.addEventListener('click', () => moveTo(currentIndex - 1));
+  btnNext.addEventListener('click', () => moveTo(currentIndex + 1));
+
+  // Reset on window resize
+  window.addEventListener('resize', () => {
+    if (!isDesktop()) {
+      track.style.transform = '';
+      currentIndex = 0;
+    } else {
+      moveTo(currentIndex);
+    }
+  });
+
+  // Init
+  moveTo(0);
+}

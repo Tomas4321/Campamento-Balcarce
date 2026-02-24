@@ -546,12 +546,15 @@ button {
 /* Mobile card: side-by-side layout (image left, body right) */
 .product-card__img-wrap {
   position: relative;
-  background: #fdfdfd;
+  background: #000;
+  /* always black — no white bleed */
   flex-shrink: 0;
-  /* Full-width image on mobile */
   aspect-ratio: 4 / 3;
   width: 100%;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-card__img-wrap--dark {
@@ -688,7 +691,10 @@ button {
 .gallery__img {
   width: 100%;
   aspect-ratio: 3 / 4;
-  object-fit: cover;
+  object-fit: contain;
+  /* show full book cover, no clipping */
+  background: #f5f5f5;
+  /* neutral light bg for pages with white margin */
   border-radius: 12px;
   box-shadow: var(--shadow-card);
   transition: transform var(--transition);
@@ -1150,7 +1156,8 @@ button {
 .modal__img-wrap {
   width: 100%;
   aspect-ratio: 1/1;
-  background: #fdfdfd;
+  background: #000;
+  /* match card dark bg */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1160,6 +1167,7 @@ button {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* show full product, no crop */
 }
 
 /* Image Expansion Modal */
@@ -1435,6 +1443,11 @@ button {
   position: relative;
 }
 
+/* Default: buttons hidden on mobile */
+.gorras-carousel__btn {
+  display: none;
+}
+
 .gorras-carousel__track {
   display: grid;
   grid-template-columns: 1fr;
@@ -1457,17 +1470,35 @@ button {
   }
 
   .gorras-carousel__track {
-    display: flex;
+    display: flex !important;
+    /* override .products__grid { display: grid } */
     gap: 20px;
-    overflow: hidden;
-    transition: transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
+    overflow-x: auto;
+    /* allow scrollBy() to work */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    /* hide scrollbar Firefox */
+    -ms-overflow-style: none;
+    /* hide scrollbar IE/Edge */
+    transition: none;
+    /* no transform transition needed */
+    will-change: scroll-position;
+    grid-template-columns: unset;
+    /* reset any grid column rules */
+  }
+
+  .gorras-carousel__track::-webkit-scrollbar {
+    display: none;
+    /* hide scrollbar Chrome/Safari */
   }
 
   .gorras-carousel__track>.product-card {
     flex: 0 0 calc(33.333% - 14px);
-    /* show 3 */
+    /* show exactly 3 */
     min-width: 0;
+    /* Cancel any grid item sizing */
+    width: auto;
   }
 
   .gorras-carousel__btn {
@@ -1509,9 +1540,6 @@ button {
 }
 
 /* Hide carousel buttons on mobile */
-.gorras-carousel__btn {
-  display: none;
-}
 
 /* ══════════════════════════════════════════
    ABOUT / NOSOTROS OVERLAY

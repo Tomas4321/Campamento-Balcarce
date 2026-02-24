@@ -412,8 +412,7 @@ function setupGorrasCarousel() {
   const btnNext = document.getElementById('carousel-next');
   if (!track || !btnPrev || !btnNext) return;
 
-  const VISIBLE = 3; // max cards visible on desktop
-  let currentIndex = 0;
+  const VISIBLE = 3;
 
   function getCards() {
     return Array.from(track.querySelectorAll('.product-card'));
@@ -423,42 +422,45 @@ function setupGorrasCarousel() {
     return window.innerWidth >= 768;
   }
 
-  function getStep() {
+  function getCardWidth() {
     const cards = getCards();
     if (!cards.length) return 0;
-    const card = cards[0];
-    const gap = 20;
-    return card.offsetWidth + gap;
+    return cards[0].getBoundingClientRect().width;
   }
 
-  function getMaxIndex() {
-    const cards = getCards();
-    return Math.max(0, cards.length - VISIBLE);
+  function getGap() {
+    // Read the computed gap from the flex container
+    const style = window.getComputedStyle(track);
+    return parseFloat(style.columnGap) || 20;
   }
 
-  function moveTo(index) {
+  function getStep() {
+    return getCardWidth() + getGap();
+  }
+
+  function scroll(direction) {
     if (!isDesktop()) return;
-    const max = getMaxIndex();
-    currentIndex = Math.max(0, Math.min(index, max));
-    const offset = currentIndex * getStep();
-    track.style.transform = `translateX(-${offset}px)`;
-    btnPrev.style.opacity = currentIndex === 0 ? '0.4' : '1';
-    btnNext.style.opacity = currentIndex >= max ? '0.4' : '1';
+    track.scrollBy({ left: direction * getStep(), behavior: 'smooth' });
   }
 
-  btnPrev.addEventListener('click', () => moveTo(currentIndex - 1));
-  btnNext.addEventListener('click', () => moveTo(currentIndex + 1));
+  function updateButtons() {
+    const atStart = track.scrollLeft <= 1;
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    btnPrev.style.opacity = atStart ? '0.4' : '1';
+    btnNext.style.opacity = atEnd ? '0.4' : '1';
+  }
 
-  // Reset on window resize
+  btnPrev.addEventListener('click', () => scroll(-1));
+  btnNext.addEventListener('click', () => scroll(1));
+  track.addEventListener('scroll', updateButtons, { passive: true });
+
   window.addEventListener('resize', () => {
     if (!isDesktop()) {
-      track.style.transform = '';
-      currentIndex = 0;
-    } else {
-      moveTo(currentIndex);
+      track.scrollLeft = 0;
     }
+    updateButtons();
   });
 
   // Init
-  moveTo(0);
+  requestAnimationFrame(updateButtons);
 }

@@ -367,7 +367,7 @@ button {
 }
 
 .hero__image {
-  width: 100%;
+  width: 60%;
   height: auto;
   border-radius: 16px;
   object-fit: cover;

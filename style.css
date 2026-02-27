@@ -316,6 +316,8 @@ button {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  background: var(--color-bg-alt);
+  /* Subtle grey — differentiates hero from content sections */
 }
 
 .hero::before {
@@ -363,21 +365,17 @@ button {
   flex: 0 0 38%;
   max-width: 38%;
   justify-content: center;
-  /* ── Depth / inset neumorphism effect ── */
-  background: #EBEBEB;
-  border-radius: 28px;
-  padding: 28px;
-  box-shadow:
-    inset 6px 6px 14px rgba(0, 0, 0, 0.13),
-    inset -6px -6px 14px rgba(255, 255, 255, 0.85);
+  align-items: center;
 }
 
 .hero__image {
-  width: 60%;
+  width: 85%;
+  /* wider since padding container is gone */
   height: auto;
   border-radius: 16px;
   object-fit: cover;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  /* ── Fire / heat glow animation ── */
+  animation: fire-glow 3.5s ease-in-out infinite;
 }
 
 .hero__badge {
@@ -1115,8 +1113,8 @@ button {
   position: relative;
   width: 100%;
   max-width: 440px;
+  /* expanded on desktop via media query */
   max-height: 90vh;
-  /* Never exceed viewport */
   display: flex;
   flex-direction: column;
   background: var(--color-bg);
@@ -1171,8 +1169,8 @@ button {
 
 .modal__img-wrap {
   width: 100%;
-  max-height: 220px;
-  /* Cap image area height */
+  max-height: 45vh;
+  /* ~45% of viewport height on mobile */
   aspect-ratio: 1/1;
   background: #000;
   display: flex;
@@ -1193,9 +1191,13 @@ button {
   background: transparent !important;
   box-shadow: none !important;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  /* prevents button overflow */
   justify-content: center;
   max-width: 90vw !important;
+  max-height: 90vh !important;
+  overflow-y: auto;
+  /* scrollable if still too tall */
 }
 
 .image-modal-img {
@@ -1323,8 +1325,10 @@ button {
 
 .cart-sidebar__content {
   position: relative;
-  width: 100%;
+  width: 85%;
+  /* 85% side drawer on mobile */
   max-width: 400px;
+  /* caps to 400px on desktop */
   height: 100%;
   background: var(--color-bg);
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
@@ -1637,4 +1641,96 @@ button {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ══════════════════════════════════════════
+   FIRE GLOW ANIMATION — Hero Logo
+   Uses brand gold → amber → orange for a
+   heat shimmer / fire effect
+══════════════════════════════════════════ */
+@keyframes fire-glow {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px 5px rgba(212, 175, 55, 0.55),
+      0 0 32px 12px rgba(255, 110, 0, 0.35),
+      0 0 56px 22px rgba(200, 50, 0, 0.18);
+    filter: brightness(1.02);
+  }
+
+  40% {
+    box-shadow:
+      0 0 22px 8px rgba(255, 165, 0, 0.72),
+      0 0 50px 18px rgba(255, 80, 0, 0.48),
+      0 0 82px 32px rgba(180, 40, 0, 0.26);
+    filter: brightness(1.06);
+  }
+
+  70% {
+    box-shadow:
+      0 0 10px 3px rgba(212, 175, 55, 0.45),
+      0 0 24px 8px rgba(255, 140, 0, 0.3),
+      0 0 46px 16px rgba(200, 80, 0, 0.17);
+    filter: brightness(1.01);
+  }
+}
+
+/* ══════════════════════════════════════════
+   MODAL — Desktop 55 / 45 Split Layout
+   ≥640px: row — image left (55%), info right (45%)
+══════════════════════════════════════════ */
+@media (min-width: 640px) {
+  .modal__content {
+    max-width: 760px;
+    /* wider card for side-by-side layout */
+    max-height: 88vh;
+  }
+
+  .modal__body {
+    flex-direction: row;
+    overflow-y: visible;
+    /* row layout — each side scrolls independently */
+  }
+
+  .modal__img-wrap {
+    flex: 0 0 55%;
+    max-height: 88vh;
+    aspect-ratio: unset;
+    /* let flex control dimensions */
+  }
+
+  .modal__img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .modal__info {
+    flex: 0 0 45%;
+    overflow-y: auto;
+    /* info side scrolls if content overflows */
+    max-height: 88vh;
+  }
+}
+
+/* ══════════════════════════════════════════
+   GALLERY LIGHTBOX — Mobile fix
+   Cap image height so "Pedir por WhatsApp"
+   button is always fully visible.
+══════════════════════════════════════════ */
+@media (max-width: 639px) {
+  .image-modal-img {
+    max-height: 62vh;
+    /* leaves ~38vh for button + gap */
+  }
+}
+
+/* ══════════════════════════════════════════
+   INSTAGRAM NAV LINK
+══════════════════════════════════════════ */
+.nav__link--instagram {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

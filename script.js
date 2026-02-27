@@ -15,8 +15,26 @@ function openWhatsApp(message) {
   window.open(buildWaUrl(message), '_blank', 'noopener,noreferrer');
 }
 
+// ── Parse price string → number (handles "$15.000", "$15,000", plain text) ──
+function parsePrice(priceStr) {
+  if (!priceStr) return 0;
+  // Remove currency symbol, dots used as thousand separators, and spaces
+  const cleaned = priceStr.replace(/[$\s]/g, '').replace(/\.(\d{3})/g, '$1').replace(',', '.');
+  const val = parseFloat(cleaned);
+  return isNaN(val) ? 0 : val;
+}
+
+// ── Format number back to peso string ──
+function formatPrice(num) {
+  if (num === 0) return '$0';
+  return '$' + num.toLocaleString('es-AR');
+}
+
 // ── CART STATE ──
 let cart = [];
+
+// Real-time total DOM reference (assigned after DOMContentLoaded)
+let cartTotalEl = null;
 
 // ── DOM ELEMENTS ──
 const modal = document.getElementById('product-modal');
@@ -182,10 +200,21 @@ function removeFromCart(id) {
   updateCartUI();
 }
 
+function changeCartQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  updateCartUI();
+}
+
 function updateCartUI() {
-  // Update badge
+  // Update badge count
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
   if (cartBadge) cartBadge.textContent = totalItems;
+
+  // Compute real-time total
+  const totalAmount = cart.reduce((acc, item) => acc + (parsePrice(item.price) * item.qty), 0);
+  if (cartTotalEl) cartTotalEl.textContent = formatPrice(totalAmount);
 
   if (cart.length === 0) {
     cartItemsContainer.innerHTML = '<p class="cart-empty">Tu carrito está vacío.</p>';
@@ -196,16 +225,35 @@ function updateCartUI() {
   cart.forEach(item => {
     const itemEl = document.createElement('div');
     itemEl.className = 'cart-item';
+    itemEl.dataset.id = item.id;
     itemEl.innerHTML = `
       <img src="${item.img}" alt="${item.name}" class="cart-item__img" />
       <div class="cart-item__info">
         <h4 class="cart-item__name">${item.name}</h4>
         ${item.options ? `<span class="cart-item__opts">${item.options}</span>` : ''}
-        <span class="cart-item__qty-price">${item.qty} x ${item.price}</span>
-        <button class="cart-item__remove" onclick="removeFromCart(${item.id})">Eliminar</button>
+        <div class="cart-item__row">
+          <div class="qty-control qty-control--mini">
+            <button class="qty-btn js-cart-minus" data-id="${item.id}">-</button>
+            <span class="cart-item__qty">${item.qty}</span>
+            <button class="qty-btn js-cart-plus" data-id="${item.id}">+</button>
+          </div>
+          <span class="cart-item__price">${formatPrice(parsePrice(item.price) * item.qty)}</span>
+        </div>
+        <button class="cart-item__remove js-cart-remove" data-id="${item.id}">Eliminar</button>
       </div>
     `;
     cartItemsContainer.appendChild(itemEl);
+  });
+
+  // Bind inline qty controls
+  cartItemsContainer.querySelectorAll('.js-cart-minus').forEach(btn => {
+    btn.addEventListener('click', () => changeCartQty(Number(btn.dataset.id), -1));
+  });
+  cartItemsContainer.querySelectorAll('.js-cart-plus').forEach(btn => {
+    btn.addEventListener('click', () => changeCartQty(Number(btn.dataset.id), 1));
+  });
+  cartItemsContainer.querySelectorAll('.js-cart-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeFromCart(Number(btn.dataset.id)));
   });
 }
 
@@ -218,13 +266,16 @@ function setupCart() {
     if (cart.length === 0) return;
 
     let msg = '¡Hola! Quiero hacer el siguiente pedido en Jóvenes La Roca:\n\n';
+    let total = 0;
     cart.forEach(item => {
-      msg += `▪️ ${item.qty}x *${item.name}*\n`;
+      const lineTotal = parsePrice(item.price) * item.qty;
+      total += lineTotal;
+      msg += `▪️ ${item.qty}x *${item.name}* — ${formatPrice(lineTotal)}\n`;
       if (item.options) {
         msg += `   (${item.options})\n`;
       }
     });
-    msg += '\n¡Aguardá su respuesta para confirmar!';
+    msg += `\n*Total: ${formatPrice(total)}*\n\n¡Aguardá su respuesta para confirmar!`;
     openWhatsApp(msg);
 
     // Reset cart state after ordering
@@ -392,6 +443,9 @@ window.addEventListener('keydown', (e) => {
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
+  // Wire real-time total DOM reference
+  cartTotalEl = document.getElementById('cart-total-value');
+
   setupGeneralButtons();
   setupModal();
   setupCart();
@@ -402,7 +456,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupImageModal();
   setupGorrasCarousel();
 
+  // Expose for safety (inline handlers are now event-delegated, but keep for resilience)
   window.removeFromCart = removeFromCart;
+  window.changeCartQty = changeCartQty;
 });
 
 // ── GORRAS CAROUSEL ──

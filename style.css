@@ -73,7 +73,6 @@ button {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }

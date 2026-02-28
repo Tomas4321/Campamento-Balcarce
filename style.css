@@ -185,6 +185,8 @@ button {
 
 /* ── LOGO ── */
 .logo {
+  display: flex;
+  gap: 3px;
   align-items: center;
   flex-shrink: 0;
 }

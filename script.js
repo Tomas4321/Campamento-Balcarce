@@ -312,17 +312,17 @@ function setupReveal() {
   });
 }
 
-// ── Header state on scroll ──
+// ── Header state on scroll (visual-only: adds subtle shadow) ──
+// Note: header is now position:relative (not fixed). This function
+// adds a slightly deeper shadow when user scrolls, for polish.
 function setupHeaderScroll() {
   const header = document.querySelector('.header');
   if (!header) return;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
+    if (window.scrollY > 10) {
       header.classList.add('header--scrolled');
-      header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
     } else {
       header.classList.remove('header--scrolled');
-      header.style.boxShadow = 'none';
     }
   }, { passive: true });
 }
@@ -359,46 +359,64 @@ function setupImageModal() {
   const images = document.querySelectorAll('.js-image-modal');
   if (images.length === 0) return;
 
-  // Create modal container
+  // ── Build lightbox DOM ────────────────────────────────────────────────────
+  // The × button is intentionally omitted: users close by clicking the
+  // dark backdrop (better UX on mobile, avoids left-align issue from the
+  // space the button previously consumed).
   const modalContainer = document.createElement('div');
   modalContainer.className = 'modal js-modal-gallery';
+  modalContainer.setAttribute('role', 'dialog');
+  modalContainer.setAttribute('aria-modal', 'true');
+  modalContainer.setAttribute('aria-label', 'Vista ampliada del libro');
   modalContainer.innerHTML = `
-    <div class="modal__backdrop js-gallery-close"></div>
-    <div class="modal__content image-modal-content" style="flex-direction: column; gap: 20px;">
-      <button class="modal__close js-gallery-close" style="top: 10px; right: 10px; z-index: 10;">&times;</button>
+    <div class="modal__backdrop js-gallery-backdrop"></div>
+    <div class="modal__content image-modal-content">
       <img src="" class="image-modal-img" id="gallery-expanded-img" alt="Vista expandida" />
-      <button id="gallery-wsp-btn" class="btn btn--primary" style="margin-top: 10px; width: auto; padding: 10px 24px;">Pedir por WhatsApp</button>
+      <button id="gallery-wsp-btn" class="btn btn--primary" style="min-width: 220px; padding: 12px 28px;">
+        Pedir por WhatsApp
+      </button>
     </div>
   `;
   document.body.appendChild(modalContainer);
 
-  const imgEl = document.getElementById('gallery-expanded-img');
-  const closers = modalContainer.querySelectorAll('.js-gallery-close');
-  const wspBtn = document.getElementById('gallery-wsp-btn');
+  const imgEl      = document.getElementById('gallery-expanded-img');
+  const backdrop   = modalContainer.querySelector('.js-gallery-backdrop');
+  const wspBtn     = document.getElementById('gallery-wsp-btn');
 
+  // ── Open ─────────────────────────────────────────────────────────────────
   images.forEach(img => {
     img.addEventListener('click', () => {
       imgEl.src = img.src;
       modalContainer.classList.add('is-active');
+      // Trap focus on the WhatsApp button for accessibility
+      requestAnimationFrame(() => wspBtn.focus());
     });
   });
 
-  closers.forEach(closer => {
-    closer.addEventListener('click', () => {
-      modalContainer.classList.remove('is-active');
-    });
+  // ── Close helpers ─────────────────────────────────────────────────────────
+  function closeGalleryModal() {
+    modalContainer.classList.remove('is-active');
+  }
+
+  // Backdrop click → close
+  backdrop.addEventListener('click', closeGalleryModal);
+
+  // Click on the content wrapper BUT outside the image/button → close
+  // (safety net for edge-cases where content spills)
+  const contentEl = modalContainer.querySelector('.image-modal-content');
+  contentEl.addEventListener('click', (e) => {
+    if (e.target === contentEl) closeGalleryModal();
   });
 
-  // Close when clicking the content area outside the image
-  const contentArea = modalContainer.querySelector('.image-modal-content');
-  contentArea.addEventListener('click', (e) => {
-    if (e.target === contentArea) {
-      modalContainer.classList.remove('is-active');
-    }
+  // Esc key → close (supplement global Esc handler)
+  modalContainer.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeGalleryModal();
   });
 
-  // WhatsApp button redirect
-  wspBtn.addEventListener('click', () => {
+  // ── WhatsApp CTA ──────────────────────────────────────────────────────────
+  // stopPropagation ensures clicking WhatsApp does NOT bubble to backdrop
+  wspBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     const msg = '¡Hola! Quiero pedir el libro "Permanecer" que vi en la galería.';
     openWhatsApp(msg);
   });

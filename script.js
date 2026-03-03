@@ -7,7 +7,7 @@ const WA_NUMBER = '5492494240181';
 
 // ── Asset path for prologue modal companion image ──
 // Update this constant if the filename changes — no need to touch HTML.
-const PROLOGUE_IMG_SRC = 'img/quienEsJesus.png';
+const PROLOGUE_IMG_SRC = 'img/quienEsJesus.jpeg';
 
 // ── Build WhatsApp URL ──
 function buildWaUrl(message) {

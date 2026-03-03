@@ -9,6 +9,15 @@ const WA_NUMBER = '5492494240181';
 // Update this constant if the filename changes — no need to touch HTML.
 const PROLOGUE_IMG_SRC = 'img/quienEsJesus.jpeg';
 
+// ── Product → verse map ──
+// To add a verse to another product, add a key matching the exact product name.
+const PRODUCT_VERSES = {
+  "Gorra Bordo 'Deleites'": {
+    ref: 'Apocalipsis 3:20 · NVI',
+    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+  }
+};
+
 // ── Build WhatsApp URL ──
 function buildWaUrl(message) {
   const encoded = encodeURIComponent(message);
@@ -125,6 +134,27 @@ function openModal(card) {
         <option value="Gris">Gris</option>
       </select>
     `;
+  }
+
+  // ── Inject verse box if product has one ──
+  const verseContainer = document.getElementById('modal-verse-slot');
+  if (!verseContainer) {
+    // Create the slot once if it doesn't exist yet
+    const slot = document.createElement('div');
+    slot.id = 'modal-verse-slot';
+    modalAddBtn.insertAdjacentElement('afterend', slot);
+  }
+  const slot = document.getElementById('modal-verse-slot');
+  const verse = PRODUCT_VERSES[name];
+  if (verse) {
+    slot.innerHTML = `
+      <div class="modal__verse" aria-label="Versículo bíblico">
+        <span class="modal__verse-ref">${verse.ref}</span>
+        <p class="modal__verse-text">${verse.text}</p>
+      </div>
+    `;
+  } else {
+    slot.innerHTML = ''; // Clear for other products
   }
 
   modal.classList.add('is-active');

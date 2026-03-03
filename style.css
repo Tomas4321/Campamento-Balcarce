@@ -40,7 +40,9 @@
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
+  /* IMPORTANT: overflow-x:hidden REMOVED from html.
+     It was breaking position:sticky on the header.
+     overflow-x:hidden stays on body only. */
 }
 
 body {
@@ -187,9 +189,14 @@ button {
 .header__logo-img {
   height: 36px;
   width: 36px;
-  border-radius: 0;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+}
+
+/* Mobile: hide the brand identity (casalaroca logo + title) */
+.header__brand {
+  display: none;
 }
 
 /* Header title is now inside .header__brand — no longer absolutely positioned */
@@ -208,11 +215,11 @@ button {
   flex-shrink: 0;
 }
 
-/* Logo: square image, no border-radius */
+/* Logo: round image */
 .logo__img {
   height: 44px;
   width: 44px;
-  border-radius: 0;
+  border-radius: 50%;
   object-fit: cover;
   transition: all 400ms ease;
 }
@@ -327,7 +334,7 @@ button {
 }
 
 /* ── HERO ── */
-/* Hero: header is now static, so no extra top padding offset needed */
+/* Hero padding: accounts for sticky header */
 .hero {
   padding-top: 48px;
   padding-bottom: 48px;
@@ -949,6 +956,17 @@ button {
 @media (min-width: 640px) {
   :root {
     --header-h: 66px;
+  }
+
+  /* Tablet+: show header brand identity */
+  .header__brand {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
   }
 
   .gallery__grid {
@@ -2070,4 +2088,36 @@ body.modal-open {
     flex: 0 0 44%;
     overflow: hidden;
   }
+}
+
+/* ══════════════════════════════════════════
+   TASK A — MODAL VERSE BOX
+   Injected dynamically by JS inside .modal__info
+   below the "Agregar al carrito" button
+══════════════════════════════════════════ */
+.modal__verse {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--color-cta);
+  background: #FAFAF7;
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal__verse-ref {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-cta);
+}
+
+.modal__verse-text {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
 }

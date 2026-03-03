@@ -18,16 +18,16 @@ const PRODUCT_VERSES = {
     text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
   },
   "Gorra Beige 'YHWH'": {
-    ref: 'Apocalipsis 3:20 · NVI',
-    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+    ref: 'Jeremías 32:27 · NVI',
+    text: '««Yo soy el Señor , Dios de toda la humanidad. ¿Hay algo imposible para mí?.»'
   },
   "Gorra Negra 'Permanecer'": {
-    ref: 'Apocalipsis 3:20 · NVI',
-    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+    ref: 'Juan 15:9 · NVI',
+    text: '«Así como el Padre me ha amado a mí, también yo los he amado a ustedes. Permanezcan en mi amor.»'
   },
   "Gorra Verde 'Cuida de mi'": {
-    ref: 'Apocalipsis 3:20 · NVI',
-    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+    ref: 'Juan 10:27-28 · NVI',
+    text: '«Mis ovejas oyen mi voz; yo las conozco y ellas me siguen. Yo les doy vida eterna y nunca perecerán, ni nadie podrá arrebatármelas de la mano.»'
   }
 };
 
@@ -150,7 +150,19 @@ function openModal(card) {
     `;
   }
 
-  // ── Inject verse box if product has one ──
+  // ── Inject price hint (between price and qty) ──
+  // Remove any previous hint so each open is clean
+  const oldHint = document.getElementById('modal-price-hint');
+  if (oldHint) oldHint.remove();
+
+  const priceHint = document.createElement('p');
+  priceHint.id = 'modal-price-hint';
+  priceHint.className = 'modal__price-hint';
+  priceHint.textContent = '\u2193 Antes de comprar, mir\u00e1 debajo del bot\u00f3n \u2193';
+  // Insert immediately after the price element
+  modalPrice.insertAdjacentElement('afterend', priceHint);
+
+  // ── Inject verse box AFTER the add-to-cart button ──
   const verseContainer = document.getElementById('modal-verse-slot');
   if (!verseContainer) {
     const slot = document.createElement('div');
@@ -161,8 +173,7 @@ function openModal(card) {
   const verse = PRODUCT_VERSES[dataProduct];
   if (verse) {
     slot.innerHTML = `
-      <p class="modal__verse-hint">↓ Antes de comprar, mirá debajo del botón ↓</p>
-      <div class="modal__verse" aria-label="Versículo bíblico">
+      <div class="modal__verse" aria-label="Vers\u00edculo b\u00edblico">
         <span class="modal__verse-ref">${verse.ref}</span>
         <p class="modal__verse-text">${verse.text}</p>
       </div>

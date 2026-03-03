@@ -280,9 +280,12 @@ button {
 }
 
 /* ── NAV — mobile first (hidden) ── */
-/* Dropdown overlays content directly below the static header */
+/* Uses opacity + visibility instead of display:none so CSS animations
+   can run. display:none → flex cannot be interpolated by the browser
+   so the stagger animation never fires. */
 .nav {
-  display: none;
+  display: flex;
+  /* always a flex container */
   flex-direction: column;
   position: absolute;
   top: 100%;
@@ -296,10 +299,19 @@ button {
   gap: 6px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   z-index: 99;
+  /* Hidden state: invisible + non-interactive */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 220ms ease, visibility 220ms ease, transform 220ms ease;
 }
 
 .nav.is-open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .nav__link {
@@ -1875,6 +1887,10 @@ button {
 
 /* Honour user preference — no animation */
 @media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+
   .nav.is-open .nav__link {
     animation: none;
   }
@@ -2106,14 +2122,31 @@ body.modal-open {
   gap: 6px;
 }
 
-/* Hint text above the verse */
+/* Hint text — shown between price and qty selector */
+.modal__price-hint {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-cta);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  padding: 6px 10px;
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 6px;
+}
+
+/* Legacy alias kept for verse slot usage */
 .modal__verse-hint {
+  display: block;
   margin-top: 14px;
   margin-bottom: 0;
   text-align: center;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--color-cta);
+  color: var(--color-text-muted);
   letter-spacing: 0.04em;
 }
 

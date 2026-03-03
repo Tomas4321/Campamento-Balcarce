@@ -5,6 +5,10 @@
 
 const WA_NUMBER = '5492494240181';
 
+// ── Asset path for prologue modal companion image ──
+// Update this constant if the filename changes — no need to touch HTML.
+const PROLOGUE_IMG_SRC = 'img/quienEsJesus.png';
+
 // ── Build WhatsApp URL ──
 function buildWaUrl(message) {
   const encoded = encodeURIComponent(message);
@@ -379,9 +383,9 @@ function setupImageModal() {
   `;
   document.body.appendChild(modalContainer);
 
-  const imgEl      = document.getElementById('gallery-expanded-img');
-  const backdrop   = modalContainer.querySelector('.js-gallery-backdrop');
-  const wspBtn     = document.getElementById('gallery-wsp-btn');
+  const imgEl = document.getElementById('gallery-expanded-img');
+  const backdrop = modalContainer.querySelector('.js-gallery-backdrop');
+  const wspBtn = document.getElementById('gallery-wsp-btn');
 
   // ── Open ─────────────────────────────────────────────────────────────────
   images.forEach(img => {
@@ -459,7 +463,65 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// ── Init ──
+// ── PROLOGUE MODAL ─────────────────────────────────────────────────
+function setupPrologueModal() {
+  const prologueBtn = document.getElementById('prologue-btn');
+  const prologueModal = document.getElementById('prologue-modal');
+  if (!prologueBtn || !prologueModal) return;
+
+  const prologueClose = document.getElementById('prologue-close');
+  const prologueBackdrop = document.getElementById('prologue-backdrop');
+
+  // Set companion image src from central constant
+  const prologueImg = prologueModal.querySelector('.prologue-modal__img');
+  if (prologueImg) prologueImg.src = PROLOGUE_IMG_SRC;
+
+  // ── Focus trap ─────────────────────────────────────────────────
+  function getFocusable() {
+    return Array.from(prologueModal.querySelectorAll(
+      'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ));
+  }
+
+  function trapFocus(e) {
+    const items = getFocusable();
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.key === 'Escape') { closePrologueModal(); return; }
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
+  // ── Open / Close ───────────────────────────────────────────────
+  function openPrologueModal() {
+    prologueModal.classList.add('is-active');
+    document.body.classList.add('modal-open');   // scroll lock
+    prologueModal.addEventListener('keydown', trapFocus);
+    requestAnimationFrame(() => {
+      const items = getFocusable();
+      if (items.length) items[0].focus();
+    });
+  }
+
+  function closePrologueModal() {
+    prologueModal.classList.remove('is-active');
+    document.body.classList.remove('modal-open');
+    prologueModal.removeEventListener('keydown', trapFocus);
+    prologueBtn.focus(); // return focus to trigger element
+  }
+
+  // ── Event listeners ──────────────────────────────────────────────
+  prologueBtn.addEventListener('click', openPrologueModal);
+  if (prologueClose) prologueClose.addEventListener('click', closePrologueModal);
+  if (prologueBackdrop) prologueBackdrop.addEventListener('click', closePrologueModal);
+}
+
+// ── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   // Wire real-time total DOM reference
   cartTotalEl = document.getElementById('cart-total-value');
@@ -473,6 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHamburger();
   setupImageModal();
   setupGorrasCarousel();
+  setupPrologueModal(); // Task 5: Prólogo book modal
 
   // Expose for safety (inline handlers are now event-delegated, but keep for resilience)
   window.removeFromCart = removeFromCart;

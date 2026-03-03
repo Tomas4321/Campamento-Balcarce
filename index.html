@@ -19,29 +19,71 @@
   <!-- HEADER / NAV -->
   <header class="header" id="header">
     <div class="container header__inner">
-      <a href="#" class="logo">
-        <img src="img/3Mas1.png" alt="Tres Mas Uno" class="logo__img" id="header-logo" />
+
+      <!-- ① Logo principal (enlace inicio) -->
+      <a href="#" class="logo" aria-label="Inicio">
+        <img src="img/3Mas1.png" alt="Tres más uno" class="logo__img" />
       </a>
-      <img src="img/casalaroca.png" alt="Casa La Roca" class="logo__img" id="header-logo" /><span
-        class="header__title">Jóvenes La Roca</span>
-      <!-- Hamburger button -->
+
+      <!-- ② Identidad central: logo casa + nombre (decorativo) -->
+      <div class="header__brand" aria-hidden="true">
+        <img src="img/casalaroca.png" alt="" class="header__logo-img" />
+        <span class="header__title">Jóvenes La Roca</span>
+      </div>
+
+      <!-- ③ Hamburguesa (mobile) -->
       <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
-      <nav class="nav" id="main-nav">
-        <a href="#gorras" class="nav__link" id="nav-gorras">Gorras</a>
-        <a href="#remeras" class="nav__link" id="nav-remeras">Remeras</a>
-        <a href="#galeria" class="nav__link">Libro</a>
-        <a href="#contacto" class="nav__link">Contacto</a>
+
+      <!-- ④ Navegación principal -->
+      <nav class="nav" id="main-nav" aria-label="Menú principal">
+
+        <a href="#gorras" class="nav__link" id="nav-gorras" style="--nav-order:0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 13h18M5 13V9.5a7 7 0 0114 0V13M3 13c0 1.657 4.03 3 9 3s9-1.343 9-3" />
+          </svg>
+          Gorras
+        </a>
+
+        <a href="#remeras" class="nav__link" id="nav-remeras" style="--nav-order:1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 3h11L21 7l-3 2v11H6V9L3 7l3.5-4z" />
+          </svg>
+          Remeras
+        </a>
+
+        <a href="#galeria" class="nav__link" style="--nav-order:2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Libro
+        </a>
+
+        <a href="#contacto" class="nav__link" style="--nav-order:3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+          Contacto
+        </a>
+
         <a href="https://www.instagram.com/jovenes.cclaroca/" target="_blank" rel="noopener noreferrer"
-          class="nav__link nav__link--instagram" id="nav-instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"
+          class="nav__link nav__link--instagram" id="nav-instagram" style="--nav-order:4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"
             aria-hidden="true">
             <path
               d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
           </svg>
           Jóvenes La Roca
         </a>
+
       </nav>
     </div>
   </header>
@@ -116,6 +158,16 @@
                   Pedir
                 </button>
               </div>
+
+              <!-- Versículo bíblico — reutilizable en cualquier card -->
+              <aside class="verse-box" aria-label="Versículo bíblico">
+                <cite class="verse-box__ref">Apocalipsis 3:20 · NVI</cite>
+                <blockquote class="verse-box__text">
+                  «Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta,
+                  entraré, cenaré con él y él conmigo.»
+                </blockquote>
+              </aside>
+
             </div>
           </article>
 
@@ -300,6 +352,14 @@
         <span class="section-tag">Imágenes</span>
         <h2 class="section-title">Libro - Permanecer🔥</h2>
         <p class="section-desc">Conocé en detalle nuestro material exclusivo.</p>
+        <button class="btn btn--primary" id="prologue-btn" style="margin-top:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Leer Prólogo
+        </button>
       </div>
       <div class="gallery__grid">
 
@@ -430,6 +490,66 @@
           </svg>
           Enviar pedido por WhatsApp
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL PRÓLOGO DEL LIBRO
+       • 2 columnas en desktop, 1 columna en mobile
+       • img/quienEsJesus.png — path configurable en script.js (PROLOGUE_IMG_SRC)
+  ══════════════════════════════════════════ -->
+  <div class="modal prologue-modal" id="prologue-modal" role="dialog" aria-modal="true"
+    aria-labelledby="prologue-modal-title">
+    <div class="modal__backdrop" id="prologue-backdrop"></div>
+    <div class="prologue-modal__panel">
+
+      <!-- Botón cerrar -->
+      <button class="prologue-modal__close" id="prologue-close" aria-label="Cerrar prólogo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          width="20" height="20" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="prologue-modal__inner">
+
+        <!-- Columna texto -->
+        <div class="prologue-modal__text-col">
+          <h2 id="prologue-modal-title" class="prologue-modal__heading">Prólogo</h2>
+          <div class="prologue-modal__body">
+            <p>En el Nuevo Testamento, hay un discípulo que se destaca por su cercanía con Jesús: Juan, el apóstol
+              amado. Llegó a ser el discípulo más íntimo de Jesús. Fue uno de los primeros que eligió, aquel que se
+              recostó en su pecho durante la última cena y el que encomendó para cuidar a su propia madre María.</p>
+            <p>Esta intimidad no solo le permitió conocer a Jesús de manera profunda, sino que también le dio acceso a
+              revelaciones y secretos del corazón del Padre.</p>
+            <p>Juan vivió el evangelio de Jesús de manera única. No solo fue un discípulo obediente, sino que también se
+              convirtió en un amigo. Su relación con Él fue tan especial que pudo escribir de manera sencilla y clara
+              sobre la vida y enseñanzas de Jesús.</p>
+            <p>El evangelio de Juan es un ejemplo de esta simplicidad. En él, encontramos las palabras más profundas y
+              reveladoras de Jesús, aquellas que nos permiten conocer su corazón y su naturaleza divina. Gracias a esta
+              relación, Jesús le permitió entender y transmitir la esencia del mensaje de manera clara y concisa.</p>
+            <p>El fruto de esta amistad, a Juan le es confiado para escribir el libro de Apocalipsis, escrito mientras
+              estaba exiliado en la isla de Patmos. En él encontramos visiones y revelaciones que nos permiten conocer
+              el plan de Dios para la humanidad y su victoria final sobre el mal.</p>
+            <p>El despliegue de esta majestuosa visión, con tantos detalles e instrucciones, tenía que ser revelada a
+              alguien de extrema confianza. Y el mismo Jesús elige a Juan, su amigo para esta tarea.</p>
+            <p>Te invitamos a conocer a Jesús desde la intimidad. A descubrir lo fascinante y cercano que es Jesús para
+              todos los que pagan el precio de la intimidad. A medida que leas este libro, te animamos a buscar una
+              relación más profunda con Él, a conocer su corazón y su naturaleza divina. En la intimidad con Jesús,
+              encontrarás la clave para entender el propósito de tu vida y la fuerza para vivirla con pasión y
+              propósito. ¡Descubrir a Jesús y conocer el corazón del Padre! Vale la pena adoptar un hábito que nos
+              catapulte a lo más profundo de Su corazón.</p>
+            <p class="prologue-modal__quote">«El hábito de habitar en Jesús.»</p>
+          </div>
+        </div>
+
+        <!-- Columna imagen -->
+        <div class="prologue-modal__img-col">
+          <!-- src cargado por JS via constante PROLOGUE_IMG_SRC = 'img/quienEsJesus.png' -->
+          <img class="prologue-modal__img" src="" alt="¿Quién es Jesús?" />
+        </div>
+
       </div>
     </div>
   </div>

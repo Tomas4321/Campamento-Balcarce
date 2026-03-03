@@ -148,11 +148,14 @@ button {
 }
 
 /* ── HEADER ── */
-/* Header: position static so page scrolls naturally over it (no sticky) */
+/* Header: sticky — stays at top while page scrolls */
 .header {
-  position: relative;
-  z-index: 100;
+  position: sticky;
+  top: 0;
+  z-index: 200;
   background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
@@ -168,16 +171,33 @@ button {
   position: relative;
 }
 
-/* Centered title in header */
-.header__title {
+/* header__brand: centered brand identity (casalaroca logo + title) */
+.header__brand {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  /* purely decorative — not interactive */
+}
+
+/* Specific class for casalaroca in header — does NOT affect .logo__img elsewhere */
+.header__logo-img {
+  height: 36px;
+  width: 36px;
+  border-radius: 0;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Header title is now inside .header__brand — no longer absolutely positioned */
+.header__title {
   font-weight: 800;
   font-size: 1rem;
   color: var(--color-primary);
   white-space: nowrap;
-  pointer-events: none;
 }
 
 /* ── LOGO ── */
@@ -532,19 +552,20 @@ button {
 }
 
 /* ── PRODUCT CARD ── */
+/* product-card: filter:drop-shadow follows border-radius (no square shadow) */
 .product-card {
   background: var(--color-bg);
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
-  transition: box-shadow var(--transition), transform var(--transition);
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.09));
+  transition: filter var(--transition), transform var(--transition);
   cursor: pointer;
   display: flex;
   flex-direction: column;
 }
 
 .product-card:hover {
-  box-shadow: var(--shadow-card-hover);
+  filter: drop-shadow(0 8px 28px rgba(0, 0, 0, 0.17));
   transform: translateY(-2px);
 }
 
@@ -1147,22 +1168,29 @@ button {
   transform: translateY(0) scale(1);
 }
 
+/* Modal close button: white background for visibility on dark product images */
 .modal__close {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 32px;
-  height: 32px;
-  background: rgba(0, 0, 0, 0.05);
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  color: var(--color-primary);
+  font-size: 1.4rem;
+  color: #111;
   z-index: 10;
   cursor: pointer;
   border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background var(--transition);
+}
+
+.modal__close:hover {
+  background: #fff;
 }
 
 .modal__watermark {
@@ -1780,4 +1808,266 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* ══════════════════════════════════════════
+   TASK 1 — NAV LINKS: ICON ALIGNMENT
+══════════════════════════════════════════ */
+
+/* Every nav link is now flex to align icon + text */
+.nav__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav__link svg {
+  flex-shrink: 0;
+  /* icon never squishes on narrow screens */
+}
+
+/* Keyboard focus visible — WCAG 2.1 AA */
+.nav__link:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ── NAV stagger animation ─────────────────
+   Uses CSS custom prop --nav-order set inline
+   so nth-child won't mis-offset if items are
+   added/removed without touching CSS.
+──────────────────────────────────────────── */
+@keyframes nav-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.nav.is-open .nav__link {
+  animation: nav-item-in 260ms ease both;
+  animation-delay: calc(var(--nav-order, 0) * 70ms);
+}
+
+/* Honour user preference — no animation */
+@media (prefers-reduced-motion: reduce) {
+  .nav.is-open .nav__link {
+    animation: none;
+  }
+}
+
+/* ══════════════════════════════════════════
+   TASK 2 — SCROLL MARGIN for sticky header
+   Prevents anchor sections from hiding under
+   the sticky bar when nav links are clicked.
+══════════════════════════════════════════ */
+#gorras,
+#remeras,
+#galeria,
+#nosotros,
+#contacto {
+  scroll-margin-top: calc(var(--header-h) + 8px);
+}
+
+/* On large desktop (header is taller) */
+@media (min-width: 1024px) {
+
+  #gorras,
+  #remeras,
+  #galeria,
+  #nosotros,
+  #contacto {
+    scroll-margin-top: calc(80px + 8px);
+    /* matches --header-h override in 1024+ breakpoint */
+  }
+
+  /* Taller brand logo on desktop */
+  .header__logo-img {
+    height: 44px;
+    width: 44px;
+  }
+}
+
+/* ══════════════════════════════════════════
+   TASK 3 — VERSE BOX component
+   Reusable: just add <aside class="verse-box">
+   inside any .product-card__body
+══════════════════════════════════════════ */
+.verse-box {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--color-cta);
+  background: #FAFAF7;
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.verse-box__ref {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-cta);
+  font-style: normal;
+}
+
+.verse-box__text {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════
+   TASK 5 — SCROLL LOCK (body when modal open)
+══════════════════════════════════════════ */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════
+   TASK 5 — PROLOGUE MODAL
+   Mobile: 1 column  |  Desktop ≥768px: 2 col
+══════════════════════════════════════════ */
+
+/* Outer container reuses .modal shared styles */
+.prologue-modal {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* White panel that holds the content */
+.prologue-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  max-height: 92vh;
+  background: var(--color-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  transform: translateY(20px) scale(0.98);
+  transition: transform 300ms ease;
+}
+
+.prologue-modal.is-active .prologue-modal__panel {
+  transform: translateY(0) scale(1);
+}
+
+/* Close button — top-right of panel */
+.prologue-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background var(--transition);
+}
+
+.prologue-modal__close:hover {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.prologue-modal__close:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+
+/* Inner: stacked on mobile, side-by-side on desktop */
+.prologue-modal__inner {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* ── Text column ── */
+.prologue-modal__text-col {
+  padding: 48px 28px 28px;
+  /* 48px top = room for close btn */
+  overflow-y: auto;
+  flex: 1;
+}
+
+.prologue-modal__heading {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.prologue-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.prologue-modal__body p {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+}
+
+.prologue-modal__quote {
+  font-size: 1rem !important;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--color-primary) !important;
+  border-left: 3px solid var(--color-cta);
+  padding-left: 14px;
+  margin-top: 6px;
+}
+
+/* ── Image column (hidden on very small screens, shown on ≥480px) ── */
+.prologue-modal__img-col {
+  display: none;
+}
+
+.prologue-modal__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Desktop: 2 columns ── */
+@media (min-width: 768px) {
+  .prologue-modal__inner {
+    flex-direction: row;
+    max-height: 92vh;
+  }
+
+  .prologue-modal__text-col {
+    flex: 0 0 56%;
+    max-height: 92vh;
+  }
+
+  .prologue-modal__img-col {
+    display: flex;
+    flex: 0 0 44%;
+    overflow: hidden;
+  }
 }

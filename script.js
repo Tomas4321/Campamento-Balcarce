@@ -10,9 +10,22 @@ const WA_NUMBER = '5492494240181';
 const PROLOGUE_IMG_SRC = 'img/quienEsJesus.jpeg';
 
 // ── Product → verse map ──
-// To add a verse to another product, add a key matching the exact product name.
+// Keys must match the data-product attribute on each <article class="product-card">.
+// To add a verse to a new product, add an entry with the exact data-product value.
 const PRODUCT_VERSES = {
   "Gorra Bordo 'Deleites'": {
+    ref: 'Apocalipsis 3:20 · NVI',
+    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+  },
+  "Gorra Beige 'YHWH'": {
+    ref: 'Apocalipsis 3:20 · NVI',
+    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+  },
+  "Gorra Negra 'Permanecer'": {
+    ref: 'Apocalipsis 3:20 · NVI',
+    text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
+  },
+  "Gorra Verde 'Cuida de mi'": {
     ref: 'Apocalipsis 3:20 · NVI',
     text: '«Mira que estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré, cenaré con él y él conmigo.»'
   }
@@ -89,6 +102,7 @@ function openModal(card) {
   const name = card.querySelector('.product-card__name').textContent;
   const desc = card.querySelector('.product-card__desc').textContent;
   const price = card.querySelector('.product-card__price').textContent;
+  const dataProduct = card.dataset.product || name; // use data-product for verse lookup
 
   // Try to find image
   const imgEl = card.querySelector('img.product-card__img');
@@ -139,22 +153,22 @@ function openModal(card) {
   // ── Inject verse box if product has one ──
   const verseContainer = document.getElementById('modal-verse-slot');
   if (!verseContainer) {
-    // Create the slot once if it doesn't exist yet
     const slot = document.createElement('div');
     slot.id = 'modal-verse-slot';
     modalAddBtn.insertAdjacentElement('afterend', slot);
   }
   const slot = document.getElementById('modal-verse-slot');
-  const verse = PRODUCT_VERSES[name];
+  const verse = PRODUCT_VERSES[dataProduct];
   if (verse) {
     slot.innerHTML = `
+      <p class="modal__verse-hint">↓ Antes de comprar, mirá debajo del botón ↓</p>
       <div class="modal__verse" aria-label="Versículo bíblico">
         <span class="modal__verse-ref">${verse.ref}</span>
         <p class="modal__verse-text">${verse.text}</p>
       </div>
     `;
   } else {
-    slot.innerHTML = ''; // Clear for other products
+    slot.innerHTML = '';
   }
 
   modal.classList.add('is-active');

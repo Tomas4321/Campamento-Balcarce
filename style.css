@@ -1183,7 +1183,9 @@ button {
   width: 100%;
   max-width: 440px;
   /* expanded on desktop via media query */
+  max-height: 90dvh;
   max-height: 90vh;
+  /* fallback */
   display: flex;
   flex-direction: column;
   background: var(--color-bg);
@@ -1245,14 +1247,19 @@ button {
 
 .modal__img-wrap {
   width: 100%;
-  max-height: 45vh;
-  /* ~45% of viewport height on mobile */
+  /* Mobile-first: 32dvh cap so all info + button fit above the fold
+     on iPhone SE (667px), iPhone 13/15/16 (844–874px).
+     Falls back to 32vh for browsers without dvh support. */
+  max-height: 32dvh;
+  max-height: 32vh;
+  /* fallback */
   aspect-ratio: 1/1;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  min-height: 0;
 }
 
 .modal__img-wrap img {
@@ -1317,10 +1324,10 @@ button {
 }
 
 .modal__info {
-  padding: 24px;
+  padding: 18px 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   background: var(--color-bg);
   position: relative;
 }
@@ -1338,10 +1345,10 @@ button {
 }
 
 .modal__price {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--color-primary);
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .modal__label {
@@ -1377,7 +1384,7 @@ button {
 }
 
 .modal__qty {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .qty-control {
@@ -1414,7 +1421,7 @@ button {
 
 .modal__add-btn {
   width: 100%;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 /* Cart Sidebar Content */
@@ -1783,6 +1790,7 @@ button {
   .modal__content {
     max-width: 760px;
     /* wider card for side-by-side layout */
+    max-height: 88dvh;
     max-height: 88vh;
   }
 
@@ -1794,6 +1802,8 @@ button {
 
   .modal__img-wrap {
     flex: 0 0 55%;
+    /* Restore full height on desktop side-by-side layout */
+    max-height: 88dvh;
     max-height: 88vh;
     aspect-ratio: unset;
     /* let flex control dimensions */
@@ -1807,8 +1817,12 @@ button {
 
   .modal__info {
     flex: 0 0 45%;
+    padding: 24px;
+    /* Restore original padding on desktop */
+    gap: 12px;
     overflow-y: auto;
     /* info side scrolls if content overflows */
+    max-height: 88dvh;
     max-height: 88vh;
   }
 }
@@ -1828,6 +1842,47 @@ button {
   /* Hide 'X' close button: backdrop click closes modal instead */
   .image-modal-content .js-gallery-close:not(.modal__backdrop) {
     display: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   PRODUCT MODAL — iPhone SE (667px tall)
+   Very short screen: cap image to 26dvh so
+   all content + button fits above the fold.
+══════════════════════════════════════════ */
+@media (max-width: 639px) and (max-height: 700px) {
+  .modal__img-wrap {
+    max-height: 26dvh;
+    max-height: 26vh;
+  }
+
+  .modal__info {
+    padding: 12px 16px 14px;
+    gap: 8px;
+  }
+
+  .modal__title {
+    font-size: 1.15rem;
+  }
+
+  .modal__qty {
+    margin-top: 4px;
+  }
+
+  .modal__add-btn {
+    margin-top: 8px;
+  }
+}
+
+/* ══════════════════════════════════════════
+   PRODUCT MODAL — Tall phones (≥900px height)
+   Pro Max / Pixel 7: allow a bigger image since
+   there's enough viewport height.
+══════════════════════════════════════════ */
+@media (max-width: 639px) and (min-height: 900px) {
+  .modal__img-wrap {
+    max-height: 38dvh;
+    max-height: 38vh;
   }
 }
 

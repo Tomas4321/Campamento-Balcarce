@@ -1,9 +1,9 @@
 // ============================================================
 // CAMPAMENTO BALCARCE — script.js
-// WhatsApp: +54 9 2494240181
+// WhatsApp: +54 9 2494278673
 // ============================================================
 
-const WA_NUMBER = '5492494240181';
+const WA_NUMBER = '5492494278673';
 
 // ── Asset path for prologue modal companion image ──
 // Update this constant if the filename changes — no need to touch HTML.
